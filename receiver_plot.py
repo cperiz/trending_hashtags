@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import pika
-from plotter import PlotHist
+from lib.plotter import PlotHist
 
 class Receiver():
 
@@ -17,9 +17,10 @@ class Receiver():
     def callback(self, ch, method, properties, body):
         print(" [x] Received %r" % body)
         if len(body) > 0:
-            hash_tup_list = [r.split("|::|") for r in body.split("||")]
+            body = body.decode('utf-8')
+            hash_tup_list = [r.split("|::|") for r in body.split("|||")]
             #: decode unicode and int
-            hash_tup_list = [(i[0].decode('utf-8'), int(i[1])) for i in hash_tup_list]
+            hash_tup_list = [(i[0], int(i[1])) for i in hash_tup_list]
             self.plot_hist.plot(tup_list=hash_tup_list)
 
 

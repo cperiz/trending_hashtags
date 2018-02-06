@@ -55,7 +55,7 @@ class StdOutListener(StreamListener):
             #: send to exchange to download
             #self.sender.send_msg(msg=",".join([i[0] for i in topX]))
             #: send to exchange to plot
-            self.sender.send_msg(msg="||".join([i[0] + "|::|" + str(i[1]) for i in topX]))
+            self.sender.send_msg(msg="|||".join([i[0] + "|::|" + str(i[1]) for i in topX]))
         return True
 
     def on_error(self, status):
@@ -64,13 +64,13 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     t_start = time.time()
-    t_silent = 25 # seconds
+    t_silent = 5 # seconds
 
     l = StdOutListener(t_start, t_silent)
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
 
     stream = Stream(auth, l)
-    #GEOBOX_MA = [-73.7990632216,41.90293316,-70.2467151391,42.9610385979]
-    GEOBOX_CA = [-124.5984090405,32.5791974819,-116.648756203,43.1737269492]
-    stream.filter(locations=GEOBOX_CA)
+    GEOBOX_MA = [-73.7990632216,41.90293316,-70.2467151391,42.9610385979]
+    #GEOBOX_CA = [-124.5984090405,32.5791974819,-116.648756203,43.1737269492]
+    stream.filter(locations=GEOBOX_MA)
