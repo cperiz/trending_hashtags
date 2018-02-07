@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import pika
-from download_news import DownloadNews
+from lib.download_news import DownloadNews
 
 class Receiver():
 
@@ -16,10 +16,11 @@ class Receiver():
 
     def callback(self, ch, method, properties, body):
         print(" [x] Received %r" % body)
-
-        for tag in body.split(","):
-            self.downloadnews.run(query=tag)
-            print(tag + " Done.")
+        if len(body) != 0:
+            for tag in body.split(","):
+                urls = self.downloadnews.run(tag=tag)
+                print(urls) #:print list of urls
+                print(tag + " Done.")
 
 
 if __name__ == '__main__':
