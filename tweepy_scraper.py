@@ -64,7 +64,7 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     t_start = time.time()
-    t_silent = 5 # seconds
+    t_silent = 25 # seconds
 
     l = StdOutListener(t_start, t_silent)
     auth = OAuthHandler(consumer_key, consumer_secret)
