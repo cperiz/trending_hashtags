@@ -43,6 +43,8 @@ Deactivate anaconda environment after use.
 source deactivate
 ```
 
+### Running
+
 Once you clone the repository open two terminals. Run the plotter (or url downloader) first. This will wait for asynchronous messages from the scraper and plot a histogram of the hashtag counts.
 
 ```
@@ -59,7 +61,7 @@ In the second terminal, run the scraper.
 python tweepy_plotter.py
 ```
 
-## Run Tests
+### Testing
 
 In progress.
 
