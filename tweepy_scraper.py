@@ -6,7 +6,8 @@ from tweepy import Stream
 import json
 import time
 import os
-from lib.hash_counter import HashProcessor
+from lib.counter import HashProcessor
+from lib.counter import ReplyProcessor
 from lib.async_sender import Sender
 
 """
@@ -15,6 +16,7 @@ from lib.async_sender import Sender
 #: Uses rabbitMQ to asynchronously message a program that
 #: downloads news urls for these hashtags or prints a histogram of hashtags.
 """
+
 """
 # ----- Bounding boxes for geolocations ------#
 ## Online-Tool to create boxes (c+p as raw CSV): http://boundingbox.klokantech.com/
@@ -37,6 +39,7 @@ class StdOutListener(StreamListener):
     def __init__(self, t_start, t_silent, *args, **kwargs):
         super(StdOutListener, self).__init__(*args, **kwargs)
         self.hash_processor = HashProcessor()
+        self.reply_processor = ReplyProcessor()
         self.sender = Sender()
         self.t_start = t_start
         self.t_silent = t_silent
@@ -46,16 +49,23 @@ class StdOutListener(StreamListener):
         tweet = json.loads(tweet)
 
         self.hash_processor.process(tweet)
+        self.reply_processor.process(tweet)
+
         if time.time()-self.t_start > self.c*t_silent:
             self.c += 1
             print()
             print("time: ", time.time()-self.t_start)
-            topX = self.hash_processor.get_topX_counts(10)
-            print(topX)
+            topXhash = self.hash_processor.get_topX_counts(10)
+            topXreply = self.reply_processor.get_topX_counts(10)
+            print(topXhash)
+            print()
+            print(topXreply)
             #: send to exchange to download
             #self.sender.send_msg(msg=",".join([i[0] for i in topX]))
             #: send to exchange to plot
-            self.sender.send_msg(msg="|||".join([i[0] + "|::|" + str(i[1]) for i in topX]))
+            self.sender.send_msg(msg="|||".join([i[0] + "|::|" + str(i[1]) for i in topXhash]), name='hash_feed')
+            self.sender.send_msg(msg="|||".join([i[0] + "|::|" + str(i[1]) for i in topXreply]), name='reply_feed')
+
         return True
 
     def on_error(self, status):
