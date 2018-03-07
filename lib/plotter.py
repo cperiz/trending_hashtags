@@ -6,6 +6,9 @@ import time
 
 class PlotHist():
 
+    def __init__(self, color):
+        self.color = color
+
     def plot(self, tup_list):
         plt.cla()
         tup_list = sorted(tup_list, key=lambda x: x[1], reverse=True)
